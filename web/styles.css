@@ -1,0 +1,91 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fb;
+  color: #102039;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 4rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.subtitle {
+  margin-top: 0.5rem;
+  color: #43526b;
+}
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 26px rgba(16, 32, 57, 0.08);
+  padding: 1rem 1.25rem;
+  margin-top: 1rem;
+}
+
+.row {
+  display: flex;
+  gap: 0.65rem;
+  margin-top: 0.5rem;
+}
+
+input {
+  flex: 1;
+  border: 1px solid #d7dfec;
+  border-radius: 10px;
+  padding: 0.7rem 0.85rem;
+  font-size: 1rem;
+}
+
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  background: #165dff;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #144fda;
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pill {
+  background: #e8efff;
+  color: #143d95;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.65rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.error {
+  color: #c22727;
+  min-height: 1.2rem;
+  margin: 0.5rem 0 0;
+}
+
+article + article {
+  margin-top: 0.75rem;
+}

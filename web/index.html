@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTranscript — Video to Readable Summary</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>LazyTranscript</h1>
+        <p class="subtitle">Paste a YouTube link and get a readable summary in seconds.</p>
+      </header>
+
+      <section class="card">
+        <label for="videoUrl">YouTube URL</label>
+        <div class="row">
+          <input
+            id="videoUrl"
+            type="url"
+            placeholder="https://www.youtube.com/watch?v=..."
+            autocomplete="off"
+          />
+          <button id="summarizeBtn">Summarize</button>
+        </div>
+        <p id="error" class="error" aria-live="polite"></p>
+      </section>
+
+      <section id="result" class="card hidden" aria-live="polite">
+        <h2 id="videoTitle">Summary Preview</h2>
+        <div class="pill-row">
+          <span class="pill">Quick Skim (1–2 min read)</span>
+          <span class="pill">Deep Brief (5–10 min read)</span>
+        </div>
+
+        <article>
+          <h3>TL;DR</h3>
+          <ul id="tldr"></ul>
+        </article>
+
+        <article>
+          <h3>Top Insights</h3>
+          <ul id="insights"></ul>
+        </article>
+
+        <article>
+          <h3>Actionable Next Steps</h3>
+          <ol id="nextSteps"></ol>
+        </article>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
