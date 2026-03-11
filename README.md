@@ -1,193 +1,97 @@
 # LazyTranscript
 
-LazyTranscript is a video-to-reading application that helps people consume long-form video content in a fraction of the time.
+LazyTranscript turns YouTube videos into readable summaries so you can learn faster without watching every minute.
 
-## Initial web app (now available)
+## What this version does
 
-You can run a lightweight starter web app locally right now:
+- Accepts a real YouTube URL
+- Pulls the video's transcript (when captions are available)
+- Generates:
+  - **Short summary** (~1–5 minute read)
+  - **Long summary** (~5–15 minute read)
+- Shows the full transcript in the UI for transparency
+
+## Quickstart (repo root)
+
+### 1) Start the web app + API server
 
 ```bash
-python3 -m http.server 4173 --directory web
+python3 app.py
 ```
 
-Then open: `http://localhost:4173`
+Or use helper scripts:
 
-### If Python is not installed (common on Windows)
+```bash
+./run.sh
+```
 
-Use one of these options from repo root:
-
-1. Try the Windows Python launcher:
 ```powershell
-py -m http.server 4173 --directory web
+.\run.ps1
 ```
 
-2. Open the static app directly (no server required for this prototype):
+### 2) Open the app
+
+Open `http://localhost:4173`.
+
+## Windows notes
+
+If `python3` is not recognized, use:
+
 ```powershell
-start .\web\index.html
+py app.py
 ```
 
-What this starter includes:
-- YouTube URL input field
-- Basic client-side URL validation
-- Mock summary output section (TL;DR, Top Insights, Next Steps)
+If `py` is also not available, install Python from https://python.org and re-run the commands above.
 
-> Note: this is a front-end preview so far; it does not call a real transcription/summarization backend yet.
+## How the summarization works (current implementation)
 
-## Product vision
+1. Extract YouTube video ID from the URL.
+2. Download transcript from YouTube caption tracks using the built-in HTTP client.
+3. Score transcript sentences using term frequency + position/length weighting.
+4. Build two extractive summaries with different target lengths.
 
-Turn a 30-minute video into:
-- a **5–10 minute readable brief**,
-- a **1–2 minute quick skim**, and
-- **actionable next steps** tailored to the viewer.
+This is a practical baseline. You can later swap in an LLM summarizer while keeping the same API contract.
 
-The first version focuses on YouTube URLs, then evolves into a homepage overlay experience that transforms a user's YouTube feed into a personalized "news desk" of readable summaries.
+## API contract
 
-## Core user stories
+### `POST /api/summarize`
 
-1. **As a viewer**, I can paste a YouTube link and get a high-quality summary without watching the entire video.
-2. **As a power user**, I can choose summary depth (quick skim vs deep brief).
-3. **As a learner/professional**, I can get recommended next actions based on the video's content.
-4. **As a YouTube-heavy user**, I can connect my YouTube account and view summaries for my feed.
-
-## MVP scope (Phase 1)
-
-### In scope
-- Input: public YouTube URL.
-- Pipeline:
-  1. Fetch metadata and transcript (official captions first; fallback to speech-to-text).
-  2. Chunk transcript and generate multi-level summaries.
-  3. Generate key takeaways, timestamps, and recommendations.
-- Output UI:
-  - **Quick Read** (1–2 min)
-  - **Standard Read** (5–10 min)
-  - **Key Points + Next Steps**
-- Basic account system to store history.
-
-### Out of scope (for MVP)
-- Browser extension overlay for the YouTube homepage.
-- Full social sharing layer.
-- Multi-language translation pipeline.
-
-## Output format curation (recommended)
-
-Each video summary should be produced in a consistent format:
-
-1. **TL;DR (3 bullets max)**
-2. **What this video is about (short paragraph)**
-3. **Top insights (5–8 bullets)**
-4. **Actionable next steps (3–5 items)**
-5. **Who this is for / who should skip**
-6. **Confidence + caveats** (e.g., missing transcript sections)
-7. **Optional timestamp map** for users who want to jump into the original video
-
-### Two-length strategy
-
-- **Quick Skim**: ~150–250 words, optimized for fast decision-making.
-- **Deep Brief**: ~700–1,200 words, optimized for understanding and retention.
-
-## Recommended system architecture
-
-### Ingestion layer
-- Accept URL input.
-- Normalize and validate source.
-- Pull metadata (title, channel, duration, publish date).
-
-### Transcript layer
-- Source priority:
-  1. Platform captions
-  2. Existing transcript providers
-  3. ASR fallback for audio extraction
-- Store transcript with timestamps and speaker segments when available.
-
-### Understanding layer
-- Chunk long transcripts by semantic boundaries + token limits.
-- Generate per-chunk summaries.
-- Merge into hierarchical final summary:
-  - chunk summary -> section summary -> final summary
-
-### Recommendation layer
-- Extract intent from the video (learn, buy, implement, compare, etc.).
-- Produce tailored next-step suggestions.
-- Attach links/resources where possible.
-
-### Delivery layer
-- Web app with cards representing summarized videos.
-- Reading-time indicator and summary-depth toggle.
-- Save/bookmark/history.
-
-## Scale considerations
-
-- Use asynchronous jobs for transcription/summarization.
-- Queue-based architecture (e.g., ingestion queue, transcript queue, summarization queue).
-- Cache transcripts and summaries by canonical video ID.
-- Add retries + dead-letter queue for failed jobs.
-- Track quality metrics:
-  - transcript coverage,
-  - summary latency,
-  - user ratings on usefulness.
-
-## Suggested phased roadmap
-
-### Phase 1 (0 -> 1): YouTube link summarizer
-- URL input -> transcript -> two summary lengths -> next steps.
-- User history and saved items.
-
-### Phase 2 (1 -> N): Personalization
-- Connect YouTube account.
-- Summarize subscriptions/home feed videos.
-- Rank summaries by user interests.
-
-### Phase 3: Overlay + workflow integration
-- Browser extension overlay for YouTube homepage.
-- "Replace thumbnails with readable briefs" mode.
-- Integrations with note-taking apps.
-
-## API design (starter)
-
-### `POST /api/videos/summarize`
 Request:
+
 ```json
 {
-  "url": "https://www.youtube.com/watch?v=...",
-  "depth": "quick|deep",
-  "include_recommendations": true
+  "url": "https://www.youtube.com/watch?v=..."
 }
 ```
 
 Response:
+
 ```json
 {
-  "video": {
-    "id": "...",
-    "title": "...",
-    "duration_seconds": 1800
-  },
+  "source_url": "https://www.youtube.com/watch?v=...",
+  "transcript": "...",
   "summary": {
-    "quick": "...",
-    "deep": "...",
-    "key_points": ["..."],
-    "next_steps": ["..."],
-    "caveats": ["..."]
-  },
-  "status": "completed"
+    "short": {
+      "text": "...",
+      "read_minutes": 3
+    },
+    "long": {
+      "text": "...",
+      "read_minutes": 8
+    }
+  }
 }
 ```
 
-## Quality rubric for summaries
+## Known limitations
 
-Use this rubric to review output quality:
-- **Accuracy**: faithful to source content.
-- **Compression quality**: key points preserved despite shorter length.
-- **Actionability**: clear recommendations and next steps.
-- **Readability**: easy to skim and structured.
-- **Trust**: clear caveats when confidence is low.
+- Currently supports YouTube URLs only.
+- Requires a transcript/captions to be available for the selected video.
+- Summaries are extractive (sentence selection), not generative/abstractive.
 
-## What you can help curate next
+## Next steps
 
-To tighten output quality quickly, define:
-1. Your preferred tone (journalistic, analytical, casual).
-2. Your preferred summary templates by content type (news, podcasts, tutorials, interviews).
-3. How opinionated recommendations should be (conservative vs assertive).
-4. Minimum quality threshold before a summary is shown.
-
-Once these are decided, they can be converted into prompt templates and evaluation tests for consistent output at scale.
+- Add optional LLM abstractive summarization for better readability.
+- Add chapter-level timestamp mapping.
+- Add saved history per user.
+- Add support for non-YouTube sources.

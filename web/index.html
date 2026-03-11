@@ -10,7 +10,7 @@
     <main class="container">
       <header>
         <h1>LazyTranscript</h1>
-        <p class="subtitle">Paste a YouTube link and get a readable summary in seconds.</p>
+        <p class="subtitle">Turn YouTube videos into quick reads and deep briefings.</p>
       </header>
 
       <section class="card">
@@ -24,30 +24,33 @@
           />
           <button id="summarizeBtn">Summarize</button>
         </div>
+        <p class="helper">Short read target: 1–5 minutes • Long read target: 5–15 minutes</p>
         <p id="error" class="error" aria-live="polite"></p>
       </section>
 
       <section id="result" class="card hidden" aria-live="polite">
-        <h2 id="videoTitle">Summary Preview</h2>
-        <div class="pill-row">
-          <span class="pill">Quick Skim (1–2 min read)</span>
-          <span class="pill">Deep Brief (5–10 min read)</span>
-        </div>
+        <h2>Generated Summary</h2>
 
         <article>
-          <h3>TL;DR</h3>
-          <ul id="tldr"></ul>
+          <div class="section-header">
+            <h3>Short Summary</h3>
+            <span id="shortReadTime" class="pill"></span>
+          </div>
+          <p id="shortSummary"></p>
         </article>
 
         <article>
-          <h3>Top Insights</h3>
-          <ul id="insights"></ul>
+          <div class="section-header">
+            <h3>Long Summary</h3>
+            <span id="longReadTime" class="pill"></span>
+          </div>
+          <p id="longSummary"></p>
         </article>
 
-        <article>
-          <h3>Actionable Next Steps</h3>
-          <ol id="nextSteps"></ol>
-        </article>
+        <details>
+          <summary>View transcript</summary>
+          <p id="transcript" class="transcript"></p>
+        </details>
       </section>
     </main>
 

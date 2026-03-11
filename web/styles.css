@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 body {
@@ -11,7 +11,7 @@ body {
 }
 
 .container {
-  max-width: 880px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 2.5rem 1rem 4rem;
 }
@@ -22,7 +22,7 @@ h1 {
 }
 
 .subtitle {
-  margin-top: 0.5rem;
+  margin-top: 0.45rem;
   color: #43526b;
 }
 
@@ -62,10 +62,21 @@ button:hover {
   background: #144fda;
 }
 
-.pill-row {
+button:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+.helper {
+  margin-top: 0.6rem;
+  color: #43526b;
+  font-size: 0.9rem;
+}
+
+.section-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .pill {
@@ -74,6 +85,7 @@ button:hover {
   border-radius: 999px;
   font-size: 0.85rem;
   padding: 0.3rem 0.65rem;
+  white-space: nowrap;
 }
 
 .hidden {
@@ -87,5 +99,15 @@ button:hover {
 }
 
 article + article {
-  margin-top: 0.75rem;
+  margin-top: 1.1rem;
+}
+
+.transcript {
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid #e5eaf4;
+  border-radius: 8px;
+  background: #fafcff;
 }
