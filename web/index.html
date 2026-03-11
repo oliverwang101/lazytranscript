@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LazyTranscript — Video to Readable Summary</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>LazyTranscript</h1>
+        <p class="subtitle">Turn YouTube videos into quick reads and deep briefings.</p>
+      </header>
+
+      <section class="card">
+        <label for="videoUrl">YouTube URL</label>
+        <div class="row">
+          <input
+            id="videoUrl"
+            type="url"
+            placeholder="https://www.youtube.com/watch?v=..."
+            autocomplete="off"
+          />
+          <button id="summarizeBtn">Summarize</button>
+        </div>
+        <p class="helper">Short read target: 1–5 minutes • Long read target: 5–15 minutes</p>
+        <p id="error" class="error" aria-live="polite"></p>
+      </section>
+
+      <section id="result" class="card hidden" aria-live="polite">
+        <h2>Generated Summary</h2>
+
+        <article>
+          <div class="section-header">
+            <h3>Short Summary</h3>
+            <span id="shortReadTime" class="pill"></span>
+          </div>
+          <p id="shortSummary"></p>
+        </article>
+
+        <article>
+          <div class="section-header">
+            <h3>Long Summary</h3>
+            <span id="longReadTime" class="pill"></span>
+          </div>
+          <p id="longSummary"></p>
+        </article>
+
+        <details>
+          <summary>View transcript</summary>
+          <p id="transcript" class="transcript"></p>
+        </details>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
